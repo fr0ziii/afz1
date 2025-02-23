@@ -149,17 +149,30 @@ class SignalGenerator:
         # 6. MACD Crossovers
         macd_signal_val = indicator_data['MACD_Signal'].iloc[-1] if 'MACD_Signal' in indicator_data.columns else None
         macd_val = indicator_data['MACD'].iloc[-1] if 'MACD' in indicator_data.columns else None
-        prev_macd_signal_val = indicator_data['MACD_Signal'].iloc[-2] if 'MACD_Signal' in indicator_data.columns and len(indicator_data) > 1 else None
-        prev_macd_val = indicator_data['MACD'].iloc[-2] if 'MACD' in indicator_data.columns and len(indicator_data) > 1 else None
+        macd_signal_val = indicator_data['MACD_Signal'].iloc[-1] if 'MACD_Signal' in indicator_data.columns else None
+        macd_val = indicator_data['MACD'].iloc[-1] if 'MACD' in indicator_data.columns else None
+        macd_histogram_val = indicator_data['MACD_Hist'].iloc[-1] if 'MACD_Hist' in indicator_data.columns else None # Histogram value
+        prev_macd_histogram_val = indicator_data['MACD_Hist'].iloc[-2] if 'MACD_Hist' in indicator_data.columns and len(indicator_data) > 1 else None # Previous histogram value
+
         macd_signal = "Neutral"
         macd_strength = 0.5
-        if macd_val is not None and macd_signal_val is not None and prev_macd_val is not None and prev_macd_signal_val is not None:
-            if prev_macd_val < prev_macd_signal_val and macd_val > macd_signal_val:
-                macd_signal = "Bullish Crossover"  # MACD bullish crossover
+
+        if macd_val is not None and macd_signal_val is not None and macd_histogram_val is not None and prev_macd_histogram_val is not None:
+            if prev_macd_histogram_val < 0 < macd_histogram_val:
+                macd_signal = "Bullish Crossover" # Histogram turns positive
                 macd_strength = 0.7
-            elif prev_macd_val > prev_macd_signal_val and macd_val < macd_signal_val:
-                macd_signal = "Bearish Crossover"  # MACD bearish crossover
+            elif prev_macd_histogram_val > 0 > macd_histogram_val:
+                macd_signal = "Bearish Crossover" # Histogram turns negative
                 macd_strength = 0.7
+            elif macd_histogram_val > 0: # Histogram is positive
+                macd_signal = "Bullish Histogram"
+                macd_strength = 0.6
+            elif macd_histogram_val < 0: # Histogram is negative
+                macd_signal = "Bearish Histogram"
+                macd_strength = 0.6
+
+            # Divergence logic can be added here in future if needed
+
         signals['macd_crossover'] = macd_signal
         signal_weights['macd_crossover'] = macd_strength
         logger.info(f"MACD Crossover Signal: {macd_signal} with strength {macd_strength}")
@@ -172,7 +185,7 @@ class SignalGenerator:
             'candlestick_direction': self.config.get('candlestick_direction_weight', 0.05),
             'chart_patterns': self.config.get('chart_patterns_weight', 0.3),
             'bollinger_bands': self.config.get('bollinger_bands_weight', 0.1),
-            'macd_crossover': self.config.get('macd_crossover_weight', 0.15),
+            'macd_crossover': self.config.get('macd_crossover_weight', 0.20), # Increased weight for refined MACD
         }
 
         weighted_sum_strength = sum(signal_weights[signal_type] * weights[signal_type] for signal_type in signal_weights)
