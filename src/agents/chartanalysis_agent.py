@@ -81,8 +81,8 @@ if __name__ == "__main__":
         "agent_type": "ChartAnalysisAgent",
         "data_source": "binance",
         "exchange": "Binance", # Added exchange to config
-        "trading_pair": "BTC/USDT",
-        "timeframe": "1h",
+        "trading_pair": "XRP/USDT",
+        "timeframe": "5m",
         "indicators": ["SMA", "EMA", "RSI", "MACD"], # Added indicators to config
         "indicator_periods": { # Corrected indicator periods config - RSI is now integer
             "SMA": [20, 50],

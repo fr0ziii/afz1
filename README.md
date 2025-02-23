@@ -41,6 +41,11 @@ The `src/agents/` directory contains a variety of agents, each designed for a sp
     -   `whale_agent.py`: Agent for monitoring large transactions (whales).
 -   `whale_watcher_agent.py`: Agent for monitoring large transactions (whales).
 
+## Agents missions
+
+The `agent_missions/` directory will contain files defining specific agent missions.
+
+-   [Chart Analysis Agent](agent_missions/chartanalysis_agent.md): Agent for analyzing charts.
 ## Setup and Installation
 
 1.  **Clone the Repository:**
