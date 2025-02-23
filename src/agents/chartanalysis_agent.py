@@ -48,7 +48,6 @@ class ChartAnalysisAgent(BaseAgent):
         """
         Sets up the chart pattern recognizer component.
         """
-        print("Pattern recognizer setup") # Placeholder setup
         return PatternRecognizer(self.config) # Instantiate PatternRecognizer
 
     def setup_signal_generator(self):
@@ -71,7 +70,10 @@ class ChartAnalysisAgent(BaseAgent):
 
             patterns = self.pattern_recognizer.recognize_patterns(chart_data) # Recognize patterns
             print("\nRecognized Patterns:")
-            print(patterns) # Print recognized patterns
+            if patterns.get('doji'):
+                print("Doji pattern detected.")
+            else:
+                print("No Doji pattern detected.")
 
             signals = self.signal_generator.generate_signals(indicator_df, patterns) # Generate signals
             print("\nTrading Signals:")
