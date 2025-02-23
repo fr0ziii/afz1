@@ -1,58 +1,58 @@
-# Agent Documentation Plan
+# Enhancement Plan for FundingAgent
 
-This document outlines the plan for creating detailed documentation for each agent in the project.
+**Agent:** `src/agents/funding_agent.py`
 
-## Goals
+**Objective:** Enhance the FundingAgent to improve configurability, robustness, and logging.
 
-- Provide comprehensive documentation for each agent.
-- Explain the purpose, functionality, and configuration of each agent.
-- Make it easy for users to understand and use the agents.
-- Ensure documentation is consistent and well-organized.
+**Proposed Enhancements:**
 
-## Structure for each Agent Documentation File
+1.  **Configurable Funding Rate Threshold:**
+    *   Make the funding rate threshold configurable via the agent's configuration.
+    *   This allows users to adjust the sensitivity of arbitrage opportunity detection.
 
-Each agent documentation file (e.g., `docs/agents/chartanalysis_agent.md`) should include the following sections:
+2.  **Configurable Trading Pairs:**
+    *   Allow users to specify trading pairs to monitor through the agent's configuration.
+    *   This enables monitoring of different markets without code modifications.
 
-1.  **Agent Name**: The name of the agent (e.g., Chart Analysis Agent).
-2.  **Description**: A detailed description of the agent's purpose and functionality. What problem does it solve? What tasks does it perform?
-3.  **Missions**: A description of the missions this agent is designed to accomplish. Link to mission files if applicable (e.g., `agent_missions/chartanalysis_agent.md`).
-4.  **Configuration**: Explain any configurable parameters for the agent. How can users customize the agent's behavior? Include examples of configuration settings.
-5.  **Inputs and Outputs**: Describe the inputs the agent expects and the outputs it produces. What data does it consume and generate?
-6.  **Workflow**: Outline the typical workflow or process the agent follows. Step-by-step explanation of how the agent operates.
-7.  **Example Usage**: Provide practical examples of how to use the agent. Show use cases and scenarios where the agent is effective.
-8.  **Code Location**: Specify the location of the agent's code (e.g., `src/agents/chartanalysis_agent.py`).
-9.  **Components**: List and describe the components used by the agent (e.g., `src/components/chart_data_provider.py`, `src/components/pattern_recognizer.py`). Explain how these components contribute to the agent's functionality.
-10. **Notes and Considerations**: Include any important notes, limitations, or considerations for using the agent. Potential issues, best practices, or future improvements.
+3.  **Implement Slippage Control:**
+    *   Introduce a slippage tolerance parameter in the configuration.
+    *   Incorporate slippage control in trade execution to account for price fluctuations during order placement.
 
-## Agent Documentation Files
+4.  **Configurable Spot Order Type:**
+    *   Make the spot order type configurable (e.g., 'market', 'limit') in the agent's configuration.
+    *   Provide flexibility in order execution based on user preferences and exchange capabilities.
 
--   [ ] `docs/agents/chartanalysis_agent.md`
--   [ ] `docs/agents/chat_agent.md`
--   [ ] `docs/agents/clips_agent.md`
--   [ ] `docs/agents/code_runner_agent.md`
--   [ ] `docs/agents/copybot_agent.md`
--   [ ] `docs/agents/focus_agent.md`
--   [ ] `docs/agents/funding_agent.md`
--   [ ] `docs/agents/fundingarb_agent.md`
--   [ ] `docs/agents/liquidation_agent.md`
--   [ ] `docs/agents/listingarb_agent.md`
--   [ ] `docs/agents/new_or_top_agent.md`
--   [ ] `docs/agents/orderbook_monitor_agent.md`
--   [ ] `docs/agents/phone_agent.md`
--   [ ] `docs/agents/rbi_agent.md`
--   [ ] `docs/agents/risk_agent.md`
--   [ ] `docs/agents/sentiment_agent.md`
--   [ ] `docs/agents/sniper_agent.md`
--   [ ] `docs/agents/solana_agent.md`
--   [ ] `docs/agents/trading_agent.md`
--   [ ] `docs/agents/tweet_agent.md`
--   [ ] `docs/agents/tx_agent.md`
--   [ ] `docs/agents/video_agent.md`
--   [ ] `docs/agents/whale_agent.md`
--   [ ] `docs/agents/whale_watcher_agent.md`
+5.  **Enhanced Logging:**
+    *   Improve logging detail by adding timestamps, function parameters, and more context to log messages.
+    *   Enhance traceability and debugging capabilities.
 
-## Next Steps
+6.  **Improved Error Handling:**
+    *   Refine error handling to differentiate between various error types (network, API, etc.).
+    *   Log specific error details for better diagnostics and potential automated recovery.
 
-1.  Create the agent documentation files based on this plan.
-2.  Populate each file with detailed information about the respective agent.
-3.  Update `docs/agents/README.md` and `docs/README.md` to include links to the new agent documentation.
+**Implementation Steps:**
+
+1.  **Configuration Updates:**
+    *   Modify the agent's configuration schema to include:
+        *   `funding_rate_threshold` (float)
+        *   `trading_pairs` (list of strings)
+        *   `slippage_tolerance` (float)
+        *   `spot_order_type` (string)
+
+2.  **Code Modifications:**
+    *   `src/agents/funding_agent.py`:
+        *   Modify `_identify_arbitrage_opportunities` to use `funding_rate_threshold` from config.
+        *   Modify `_execute_arbitrage_trade` to:
+            *   Incorporate `slippage_tolerance` in order placement logic.
+            *   Use `spot_order_type` from config for spot orders.
+        *   Enhance logging throughout the class.
+        *   Refine error handling with more specific exception handling and logging.
+
+3.  **Documentation Updates:**
+    *   Update `docs/agents/funding_agent.md` to document the new configuration options and enhancements.
+
+**Next Steps:**
+
+*   Proceed with implementing the configuration updates and code modifications in `src/agents/funding_agent.py`.
+*   Update documentation in `docs/agents/funding_agent.md`.
+*   Test the enhanced FundingAgent with different configurations and market conditions.

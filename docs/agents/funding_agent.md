@@ -11,10 +11,14 @@ The Funding Agent is designed for monitoring and analyzing funding rate data in 
 
 ## Configuration
 
-The Funding Agent inherits basic configuration parameters from the `BaseAgent`. Specific configurations for funding rate data sources, trading pairs, and analysis parameters would be defined in the agent's configuration.
+The Funding Agent can be configured with the following parameters in the `agent_config` section of the main configuration:
 
--   **agent_id**: A unique identifier for the agent instance.
--   **agent_type**: Must be set to `FundingAgent`.
+-   **agent_id**: A unique identifier for the agent instance (inherited from `BaseAgent`).
+-   **agent_type**: Must be set to `FundingAgent` (inherited from `BaseAgent`).
+-   **trading_pairs**: A list of trading pairs to monitor for funding rate arbitrage opportunities (e.g., `["BTCUSDT", "ETHUSDT"]`). Defaults to `["BTCUSDT", "ETHUSDT"]`.
+-   **funding_rate_threshold**: The funding rate threshold (as a decimal, e.g., `0.0001` for 0.01%) above which arbitrage opportunities are considered. Defaults to `0.0001` (0.01%).
+-   **slippage_tolerance**: The maximum allowed slippage (as a decimal, e.g., `0.001` for 0.1%) for spot market orders during arbitrage execution. Defaults to `0.001` (0.1%).
+-   **spot_order_type**: The order type to use for spot market orders in arbitrage trades (e.g., `"market"`, `"limit"`). Defaults to `"market"`.
 
 ### Example Configuration
 
@@ -22,8 +26,14 @@ The Funding Agent inherits basic configuration parameters from the `BaseAgent`. 
 config:
   agent_id: funding_agent_01
   agent_type: FundingAgent
-  # Add any funding rate monitoring specific configurations here in the future
-  # e.g., exchange, trading_pairs, funding_rate_thresholds
+  agent_config:
+    binance_api: # Binance API configuration (required for BinanceDataProvider)
+      api_key: "YOUR_BINANCE_API_KEY"
+      api_secret: "YOUR_BINANCE_API_SECRET"
+    trading_pairs: ["BTCUSDT", "ETHUSDT", "SOLUSDT"]
+    funding_rate_threshold: 0.0002  # 0.02% threshold
+    slippage_tolerance: 0.0005     # 0.05% slippage tolerance
+    spot_order_type: "market"
 ```
 
 ## Inputs and Outputs
