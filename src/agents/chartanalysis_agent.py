@@ -97,7 +97,7 @@ if __name__ == "__main__":
         "exchange": "Binance", # Added exchange to config
         "trading_pair": "XRP/USDT",
         "timeframe": "5m",
-        "indicators": ["SMA", "EMA", "RSI", "MACD"], # Added indicators to config
+        "indicators": ["SMA", "EMA", "RSI", "MACD", "Bollinger Bands"], # Added indicators to config
         "indicator_periods": { # Corrected indicator periods config - RSI is now integer
             "SMA": [20, 50],
             "EMA": [20, 50],

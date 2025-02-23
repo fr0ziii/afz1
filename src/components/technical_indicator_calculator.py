@@ -37,6 +37,8 @@ class TechnicalIndicatorCalculator:
                 df = self._calculate_rsi(df)
             elif indicator_name == "MACD":
                 df = self._calculate_macd(df)
+            elif indicator_name == "Bollinger Bands": # Add Bollinger Bands calculation
+                df = self._calculate_bollinger_bands(df)
             # Add other indicators here
         return df
 
@@ -100,4 +102,14 @@ class TechnicalIndicatorCalculator:
         df['MACD_Histogram'] = histogram
         return df
 
+    def _calculate_bollinger_bands(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Calculates Bollinger Bands.
+        """
+        period = self.config.get("indicator_periods", {}).get("Bollinger Bands", 20) # Default period is 20
+        sma = df['close'].rolling(window=period).mean()
+        std_dev = df['close'].rolling(window=period).std()
+        df['BB_Upper'] = sma + 2 * std_dev
+        df['BB_Lower'] = sma - 2 * std_dev
+        return df
     # Add more indicator calculation methods here (e.g., Bollinger Bands, Fibonacci Retracement)
