@@ -1,4 +1,4 @@
-# afz1 - Autonomous Finance Agents
+<h1 style="text-align: center;"> afz1 - Autonomous Finance Agents </h1>
 
 afz1 is a project focused on developing autonomous agents for various tasks in the decentralized finance (DeFi) space. These agents are designed to automate and optimize different aspects of trading, risk management, information gathering, and more.
 
@@ -46,7 +46,7 @@ The `src/agents/` directory contains a variety of agents, each designed for a sp
 1.  **Clone the Repository:**
 
     ```bash
-    git clone [repository URL]  # Replace with your actual repository URL
+    git clone https://github.com/fr0ziii/afz1
     cd afz1
     ```
 2.  **Environment Setup:**
@@ -105,7 +105,7 @@ Contributions to the project are welcome. Please refer to the contributing guide
 
 ## License
 
-This project is licensed under the [License Name] License.
+This project is licensed under the MIT License.
 
 ## Disclaimer
 
