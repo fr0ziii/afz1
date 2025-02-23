@@ -7,10 +7,21 @@ afz1 is a project focused on developing autonomous agents for various tasks in t
 The project is structured as follows:
 
 -   `src/`: Contains the source code for the different autonomous agents.
+-   `data/`: Contains data files and resources.
+-   `memory-bank/`: Contains memory bank files for project context and history.
 -   `.env_example`: Example environment file.
 -   `.gitignore`: Specifies intentionally untracked files that Git should ignore.
 -   `README.md`: The current file, providing an overview of the project.
 -   `requirements.txt`: Lists the project's dependencies.
+## Components
+
+The `src/components/` directory contains reusable components that are used by the agents. These components include:
+
+-   `binance_data_provider.py`: Component for providing data from Binance.
+-   `chart_data_provider.py`: Component for providing chart data.
+-   `pattern_recognizer.py`: Component for recognizing chart patterns.
+-   `signal_generator.py`: Component for generating trading signals.
+-   `technical_indicator_calculator.py`: Component for calculating technical indicators.
 
 ## Agents
 
@@ -38,8 +49,9 @@ The `src/agents/` directory contains a variety of agents, each designed for a sp
 -   `tweet_agent.py`: Agent for interacting with Twitter.
 -   `tx_agent.py`: Agent for monitoring transactions.
 -   `video_agent.py`: Agent for creating videos.
-    -   `whale_agent.py`: Agent for monitoring large transactions (whales).
+-   `whale_agent.py`: Agent for monitoring large transactions (whales).
 -   `whale_watcher_agent.py`: Agent for monitoring large transactions (whales).
+-   `orderbook_monitor_agent.py`: Agent for monitoring order books.
 
 ## Agents missions
 
