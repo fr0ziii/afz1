@@ -62,10 +62,10 @@ class ChartAnalysisAgent(BaseAgent):
 
     def setup_signal_generator(self) -> SignalGenerator:
         """
-        Sets up the signal generator component.
+        Sets up the signal generator component, passing the agent's configuration.
         """
-        logger.info("Signal generator setup") # Placeholder setup
-        return SignalGenerator(self.config)
+        logger.info("Signal generator setup with agent configuration")
+        return SignalGenerator(self.config.get('signal_generator_config', {}))
 
     def validate_config(self) -> None:
         """
@@ -147,6 +147,14 @@ if __name__ == "__main__":
             "MACD": {"fast_period": 12, "slow_period": 26, "signal_period": 9}
         },
         "patterns": ["TrendLines", "SupportResistance", "Triangles"],
+        "signal_generator_config": { # Configuration for signal generator
+            "momentum_weight": 0.5,
+            "volume_weight": 0.2,
+            "candlestick_direction_weight": 0.1,
+            "chart_patterns_weight": 0.6,
+            "bollinger_bands_weight": 0.3,
+            "macd_crossover_weight": 0.4,
+        },
         # API keys can be added to config or environment variables
         # "api_key": "YOUR_BINANCE_API_KEY",
         # "api_secret": "YOUR_BINANCE_API_SECRET",

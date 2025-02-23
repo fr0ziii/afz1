@@ -164,18 +164,35 @@ class SignalGenerator:
         signal_weights['macd_crossover'] = macd_strength
         logger.info(f"MACD Crossover Signal: {macd_signal} with strength {macd_strength}")
 
-        # 7. Consolidated Signal and Confidence (Weighted Averaging)
-        total_weighted_strength = sum(signal_weights.values())
-        num_signals = len(signal_weights)
-        average_weighted_strength = total_weighted_strength / num_signals if num_signals > 0 else 0.5
+        # 7. Consolidated Signal and Confidence (Weighted Sum with Configurable Weights)
+        # Define weights for each signal type (configurable in __init__)
+        weights = {
+            'momentum': self.config.get('momentum_weight', 0.4),
+            'volume': self.config.get('volume_weight', 0.1),
+            'candlestick_direction': self.config.get('candlestick_direction_weight', 0.05),
+            'chart_patterns': self.config.get('chart_patterns_weight', 0.3),
+            'bollinger_bands': self.config.get('bollinger_bands_weight', 0.1),
+            'macd_crossover': self.config.get('macd_crossover_weight', 0.15),
+        }
+
+        weighted_sum_strength = sum(signal_weights[signal_type] * weights[signal_type] for signal_type in signal_weights)
+        total_weight = sum(weights.values())
+        average_weighted_strength = weighted_sum_strength / total_weight if total_weight > 0 else 0.5
 
         confidence = int(average_weighted_strength * 100)
-        if confidence >= 60:
+        if confidence >= 70: # Increased threshold for BUY
             overall_signal = "BUY"
-        elif confidence <= 40:
+        elif confidence <= 30: # Decreased threshold for SELL
             overall_signal = "SELL"
-        else:
+        elif 40 <= confidence < 60: # Narrowed HOLD range, added SLIGHT_BUY/SLIGHT_SELL
             overall_signal = "HOLD"
+        elif 60 <= confidence < 70:
+            overall_signal = "SLIGHT_BUY"
+        elif 30 < confidence < 40:
+            overall_signal = "SLIGHT_SELL"
+        else:
+            overall_signal = "NEUTRAL" # Default to NEUTRAL if none of the conditions are met
+
         signals['overall_signal'] = overall_signal
         signals['confidence'] = f"{confidence}%"
         logger.info(f"Overall Signal: {overall_signal} with confidence {confidence}%")
@@ -191,6 +208,7 @@ class SignalGenerator:
         print(f"[{timestamp}]   Momentum: EMA(20)={ema_20:.2f}, EMA(50)={ema_50:.2f}, RSI(14)={rsi_14:.2f} - {momentum_signal}")
         print(f"[{timestamp}]   Volume: Last Volume={current_volume:.2f}, 7-MA Volume={volume_ma_7:.2f}, 30-MA Volume={volume_ma_30:.2f} - {volume_signal}")
         print(f"[{timestamp}]   Candlestick: Last Candle - {candlestick_signal}")
+        print(f"[{timestamp}]   Chart Patterns: {pattern_list_str} - {pattern_signal}") # Added chart patterns to output
         print(f"[{timestamp}]   Bollinger Bands: Close={price:.2f}, Lower Band={bb_lower:.2f}, Upper Band={bb_upper:.2f} - {bollinger_signal}")
         print(f"[{timestamp}]   MACD Crossover: MACD={macd_val:.4f}, Signal={macd_signal_val:.4f} - {macd_signal}")
 
