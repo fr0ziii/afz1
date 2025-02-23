@@ -1,6 +1,5 @@
 .clinerules-*
 .env
-docs/
 projectBrief.md
 
 venv/
