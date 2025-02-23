@@ -9,8 +9,8 @@ class BinanceDataProvider(ChartDataProvider):
 
     def __init__(self, config):
         super().__init__(config)
-        self.api_key = os.environ.get('BINANCE_API_KEY')
-        self.api_secret = os.environ.get('BINANCE_SECRET_KEY')
+        self.api_key = config.get("BINANCE_API_KEY")
+        self.api_secret = config.get("BINANCE_SECRET_KEY")
         self.exchange_client = self.setup_exchange_client()
 
     def setup_exchange_client(self):

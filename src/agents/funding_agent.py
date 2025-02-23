@@ -1,4 +1,5 @@
 import logging
+import os
 from src.agents.base_agent import BaseAgent
 from src.components.binance_data_provider import BinanceDataProvider
 
@@ -42,6 +43,7 @@ class FundingAgent(BaseAgent):
         """
         print("FundingAgent setup_dependencies is being called...")
         logger.info("FundingAgent setup_dependencies called")
+        (f"{self.config}")
         super().setup_dependencies()
         agent_config = self.config.get("agent_config", {})
         self.exchange_interface = BinanceDataProvider(agent_config.get("binance_api", {}))
@@ -187,7 +189,14 @@ class FundingAgent(BaseAgent):
 
 if __name__ == '__main__':
     # Example usage or testing
-    config = {"trading_pairs": ["BTCUSDT", "ETHUSDT"], "agent_config": {"binance_api": {}}}
+    config = {"trading_pairs": ["BTCUSDT", "ETHUSDT"], 
+              "agent_config": {
+                  "binance_api": {
+                    "api_key": os.environ.get("BINANCE_API_KEY"),
+                    "api_secret": os.environ.get("BINANCE_API_SECRET")
+                  }
+                }
+            }
     agent = FundingAgent(config)
     agent.setup_dependencies()
     agent.run()
