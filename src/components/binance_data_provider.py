@@ -49,3 +49,57 @@ class BinanceDataProvider(ChartDataProvider):
         except Exception as e:
             print(f"Error fetching funding rate for {symbol} from Binance: {e}")
             return None
+    def get_ticker(self, symbol, market_type='spot'):
+        """
+        Fetches ticker data for a specific symbol from Binance.
+
+        Args:
+            symbol (str): The trading pair symbol (e.g., 'BTC/USDT').
+            market_type (str, optional): 'spot' or 'futures'. Defaults to 'spot'.
+
+        Returns:
+            dict: Ticker data for the symbol.
+        """
+        try:
+            if market_type == 'futures':
+                ticker = self.exchange_client.fetch_ticker(symbol) # Use just symbol for futures
+            else:
+                ticker = self.exchange_client.fetch_ticker(symbol) # For spot market
+            return ticker
+        except Exception as e:
+            print(f"Error fetching ticker for {symbol} ({market_type}) from Binance: {e}")
+            return None
+
+    def place_order(self, symbol, side, quantity, market_type='spot', order_type='market'):
+        """
+        Places an order on Binance.
+
+        Args:
+            symbol (str): The trading pair symbol (e.g., 'BTC/USDT').
+            side (str): 'buy' or 'sell'.
+            quantity (float): The quantity to trade.
+            market_type (str, optional): 'spot' or 'futures'. Defaults to 'spot'.
+            order_type (str, optional): 'market' or 'limit'. Defaults to 'market'.
+
+        Returns:
+            dict: Order details from exchange or None if error.
+        """
+        try:
+            if market_type == 'futures':
+                order = self.exchange_client.create_order(
+                    symbol=symbol, # Use just symbol for futures order
+                    type=order_type,
+                    side=side,
+                    amount=quantity,
+                )
+            else: # Spot market
+                order = self.exchange_client.create_order(
+                    symbol=symbol,
+                    type=order_type,
+                    side=side,
+                    amount=quantity,
+                )
+            return order
+        except Exception as e:
+            print(f"Error placing {order_type} {side} order for {quantity} {symbol} ({market_type}) on Binance: {e}")
+            return None

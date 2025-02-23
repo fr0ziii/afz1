@@ -92,8 +92,13 @@ This example shows the basic instantiation of the Funding Agent. The `run` metho
 
 ## Notes and Considerations
 
--   **Placeholder Implementation**: The current `FundingAgent` is a basic placeholder. Significant implementation is required to add actual funding rate monitoring capabilities.
--   **Data Source Integration**:  Implementing data source integration would involve defining APIs to fetch funding rate data from different exchanges or data providers.
--   **Analysis Logic**:  Define the logic for analyzing funding rates and generating meaningful signals or alerts.
--   **Alerting Mechanisms**:  Implement alerting mechanisms to notify users when funding rate conditions meet predefined criteria (e.g., email, push notifications).
--   **Backtesting and Validation**:  Backtest and validate funding rate analysis strategies to ensure their effectiveness before deploying in live trading scenarios.
+-   **Debugging and Progress**: Significant debugging and fixes have been implemented to get the `FundingAgent` to fetch funding rates, identify arbitrage opportunities, fetch ticker data, and attempt to place orders.
+-   **Implemented `get_ticker` and `place_order`**: The `get_ticker` and `place_order` methods have been implemented in `BinanceDataProvider` to enable ticker data fetching and order placement functionalities.
+-   **Symbol Format Fixes**: Symbol format issues for both ticker fetching and order placement with `binanceusdm` exchange client have been identified and resolved.
+-   **Price Extraction Fix**: Price extraction logic in `_execute_arbitrage_trade` has been corrected to use `'last'` instead of `'lastPrice'` to align with the ticker data format.
+-   **API Key Requirement**: The agent now requires Binance API keys to be set as environment variables (`BINANCE_API_KEY` and `BINANCE_API_SECRET`) for order placement to function.
+-   **Next Steps**: The next step is to set the Binance API keys and test the order placement functionality of the `FundingAgent`.
+-   **Further Enhancements**: Future enhancements include implementing actual trade execution logic, slippage control, order type configurations, and comprehensive testing on Binance Testnet.
+-   **Data Source Integration**:  Further data source integration and analysis logic can be added to enhance the agent's capabilities.
+-   **Alerting Mechanisms**:  Implementing alerting mechanisms to notify users when arbitrage opportunities are identified or trades are executed.
+-   **Backtesting and Validation**:  Backtest and validate the arbitrage strategy and trading logic to ensure their effectiveness before deploying in live trading scenarios.

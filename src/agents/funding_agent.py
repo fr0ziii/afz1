@@ -30,7 +30,7 @@ class FundingAgent(BaseAgent):
         self.exchange_interface = exchange_interface
 
         agent_config = config.get("agent_config", {})
-        self.funding_rate_threshold = agent_config.get("funding_rate_threshold", 0.0001)  # Default 0.01%
+        self.funding_rate_threshold = agent_config.get("funding_rate_threshold", 0.0000001)  # Reduced threshold
         self.trading_pairs = agent_config.get("trading_pairs", ["BTCUSDT", "ETHUSDT"]) # Default pairs
         self.slippage_tolerance = agent_config.get("slippage_tolerance", 0.001) # Default 0.1%
         self.spot_order_type = agent_config.get("spot_order_type", "market") # Default to market order
@@ -80,8 +80,10 @@ class FundingAgent(BaseAgent):
         funding_rates = {}
         for pair in trading_pairs:
             logger.info(f"Fetching funding rate for {pair}...")
+            print(f"Before get_funding_rate for {pair}...")  # ADDED PRINT
             try:
                 rate_data = self.exchange_interface.get_funding_rate(pair)
+                print(f"After get_funding_rate for {pair}...")   # ADDED PRINT
                 if rate_data:
                     funding_rates[pair] = rate_data
                     logger.info(f"Funding Rate for {pair}: {rate_data}")
@@ -101,6 +103,8 @@ class FundingAgent(BaseAgent):
         Returns:
             list: A list of dictionaries, each representing an arbitrage opportunity.
         """
+        print("FundingAgent _identify_arbitrage_opportunities is being called...") # ADDED PRINT
+        print(f"Funding rates received: {funding_rates}") # ADDED PRINT
         threshold = self.funding_rate_threshold
         opportunities = []
         for pair, rate_data in funding_rates.items():
@@ -113,7 +117,10 @@ class FundingAgent(BaseAgent):
                     'direction': direction,
                     'funding_rate': funding_rate
                 })
-                logger.info(f"Arbitrage opportunity identified for {pair}: {direction}, funding rate: {funding_rate}")
+                print(f"Checking arbitrage condition for {pair}: funding_rate={funding_rate}, threshold={threshold}") # ADDED PRINT
+                if abs(funding_rate) > threshold:
+                    print(f"Arbitrage condition met for {pair} with rate {funding_rate} and threshold {threshold}") # ADDED PRINT
+                    logger.info(f"Arbitrage opportunity identified for {pair}: {direction}, funding rate: {funding_rate}")
         return opportunities
 
     def _execute_arbitrage_trade(self, opportunity):
@@ -122,8 +129,9 @@ class FundingAgent(BaseAgent):
 
         Args:
             opportunity (dict): A dictionary containing arbitrage opportunity details,
-                               including pair, direction, and funding rate.
+                                including pair, direction, and funding rate.
         """
+        print("FundingAgent _execute_arbitrage_trade is being called...") # ADDED PRINT
         pair = opportunity['pair']
         direction = opportunity['direction']
         funding_rate = opportunity['funding_rate']
@@ -136,8 +144,10 @@ class FundingAgent(BaseAgent):
         try:
             perp_ticker = self.exchange_interface.get_ticker(pair, market_type='futures')
             spot_ticker = self.exchange_interface.get_ticker(pair, market_type='spot')
-            perp_price = float(perp_ticker['lastPrice'])
-            spot_price = float(spot_ticker['lastPrice'])
+            print(f"Perp Ticker for {pair}: {perp_ticker}") # ADDED PRINT
+            print(f"Spot Ticker for {pair}: {spot_ticker}") # ADDED PRINT
+            perp_price = float(perp_ticker['last']) # Use 'last' instead of 'lastPrice'
+            spot_price = float(spot_ticker['last']) # Use 'last' instead of 'lastPrice'
         except Exception as e:
             logger.error(f"Error fetching prices for {pair}: {e}")
             return

@@ -14,6 +14,8 @@ Welcome to the documentation for the `afz1` project, an open-source framework fo
 *   **[Contribution Guide](./contributing/README.md)**:  Find guidelines for contributing to the `afz1` project.
 *   **[Troubleshooting Guide](./troubleshooting/README.md)**:  Solutions to common issues and errors.
 *   **[Glossary of Terms](./glossary/README.md)**:  Definitions of key terms used in the project.
+*   **[Project Diagrams](./diagrams.md)**: Visual representations of the project architecture and agent communication patterns.
+*   **[Project Features](./features.md)**: Feature stack and development priorities.
 
 ## ROADMAP
 
