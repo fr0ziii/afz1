@@ -80,7 +80,7 @@ class ConfigurationManager:
     """Loads configuration settings."""
     def __init__(self):
         load_dotenv()
-        self.trading_pair = os.getenv("TRADING_PAIR", "BTCUSDT")
+        self.trading_pair = os.getenv("TRADING_PAIR", "XRPUSDT")
         self.large_order_threshold_usd = float(os.getenv("LARGE_ORDER_THRESHOLD_USD", 1000000.0))  # $1M default
         self.monitor_interval = int(os.getenv("MONITOR_INTERVAL", 10))  # 10s default
 
