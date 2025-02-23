@@ -1,6 +1,8 @@
-from .base_agent import BaseAgent # Changed to relative import
-from ..components.binance_data_provider import BinanceDataProvider # Changed to relative import
-from ..components.technical_indicator_calculator import TechnicalIndicatorCalculator # Import TechnicalIndicatorCalculator
+from src.agents.base_agent import BaseAgent # Changed to absolute import
+from src.components.binance_data_provider import BinanceDataProvider # Changed to absolute import
+from ..components.pattern_recognizer import PatternRecognizer # Import PatternRecognizer
+from ..components.signal_generator import SignalGenerator # Import SignalGenerator
+from src.components.technical_indicator_calculator import TechnicalIndicatorCalculator # Import TechnicalIndicatorCalculator
 
 class ChartAnalysisAgent(BaseAgent):
     """
@@ -46,13 +48,15 @@ class ChartAnalysisAgent(BaseAgent):
         """
         Sets up the chart pattern recognizer component.
         """
-        pass
+        print("Pattern recognizer setup") # Placeholder setup
+        return PatternRecognizer(self.config) # Instantiate PatternRecognizer
 
     def setup_signal_generator(self):
         """
         Sets up the signal generator component.
         """
-        pass
+        print("Signal generator setup") # Placeholder setup
+        return SignalGenerator(self.config) # Instantiate SignalGenerator
 
 
     def run(self):
@@ -64,6 +68,14 @@ class ChartAnalysisAgent(BaseAgent):
             indicator_df = self.indicator_calculator.calculate_indicators(chart_data) # Calculate indicators
             print("Chart Data with Indicators:")
             print(indicator_df) # Print DataFrame with indicators
+
+            patterns = self.pattern_recognizer.recognize_patterns(chart_data) # Recognize patterns
+            print("\nRecognized Patterns:")
+            print(patterns) # Print recognized patterns
+
+            signals = self.signal_generator.generate_signals(indicator_df, patterns) # Generate signals
+            print("\nTrading Signals:")
+            print(signals) # Print trading signals
         else:
             print("Failed to fetch chart data.")
 
