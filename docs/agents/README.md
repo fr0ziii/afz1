@@ -65,8 +65,6 @@ This section details each agent available in `afz1`.
     *   The USD value threshold for identifying whale transactions is currently hardcoded but could be made configurable in future versions.
     *   The monitoring interval (currently 3 seconds) can be adjusted in the `run` method.
 
-**(Continue this pattern for each agent in `src/agents/`, including: `whale_agent.py`, `liquidation_agent.py`, `funding_agent.py`, `listingarb_agent.py`, `new_or_top_agent.py`, `sniper_agent.py`, `tx_agent.py`, `solana_agent.py`, `tweet_agent.py`, `video_agent.py`, `chat_agent.py`, `clips_agent.py`, `phone_agent.py`, `code_runner_agent.py`,  `rbi_agent.py`, `copybot_agent.py`, `focus_agent.py`, `fundingarb_agent.py`)**
-
 ### 5. Chart Analysis Agent (`chartanalysis_agent.py`)
 
 *   **Purpose:** Performs technical analysis on cryptocurrency charts to generate trading signals.
@@ -78,61 +76,6 @@ This section details each agent available in `afz1`.
 *   **Output and Monitoring:** Trading signals, technical indicator data, recognized patterns, and logs. (See [Chart Analysis Agent Documentation](./chartanalysis_agent.md) for details)
 *   **Customization Notes:** Tune configuration parameters for different trading strategies and market conditions. (See [Chart Analysis Agent Documentation](./chartanalysis_agent.md) for details)
 *   **Customization Notes:** Tune configuration parameters for different trading strategies and market conditions. (See [Chart Analysis Agent Documentation](./chartanalysis_agent.md) for details)
-
-### 6. Chat Agent (`chat_agent.py`)
-
-*   **Purpose:**  Interacts with users through chat interfaces for command and control or information retrieval.
-*   **Functionality:** Basic framework for chat interaction. (For more details, see [Chat Agent Documentation](./chat_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** User chat input (text).
-*   **Configuration Parameters:** `agent_id`, `agent_type`. (See [Chat Agent Documentation](./chat_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent as shown in the [Chat Agent Documentation](./chat_agent.md).
-*   **Output and Monitoring:** Chat responses and logs. (See [Chat Agent Documentation](./chat_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to integrate with chat interfaces and add interaction logic. (See [Chat Agent Documentation](./chat_agent.md) for details)
-
-### 7. Clips Agent (`clips_agent.py`)
-
-*   **Purpose:**  Creates and manages video clips or short-form content for market analysis or updates.
-*   **Functionality:** Basic framework for video clip generation. (For more details, see [Clips Agent Documentation](./clips_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** Market data, analysis results, event triggers.
-*   **Configuration Parameters:** `agent_id`, `agent_type`. (See [Clips Agent Documentation](./clips_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent as shown in the [Clips Agent Documentation](./clips_agent.md).
-*   **Output and Monitoring:** Video clips, content metadata, and logs. (See [Clips Agent Documentation](./clips_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to add video generation logic and content integration. (See [Clips Agent Documentation](./clips_agent.md) for details)
-
-### 8. Code Runner Agent (`code_runner_agent.py`)
-
-*   **Purpose:**  Executes and tests code snippets for various tasks like backtesting or data analysis.
-*   **Functionality:** Basic framework for running code. (For more details, see [Code Runner Agent Documentation](./code_runner_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** Code snippets, execution environment configurations.
-*   **Configuration Parameters:** `agent_id`, `agent_type`. (See [Code Runner Agent Documentation](./code_runner_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent as shown in the [Code Runner Agent Documentation](./code_runner_agent.md).
-*   **Output and Monitoring:** Execution results and logs. (See [Code Runner Agent Documentation](./code_runner_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to add secure code execution and language support. (See [Code Runner Agent Documentation](./code_runner_agent.md) for details)
-
-### 9. Copy Bot Agent (`copybot_agent.py`)
-
-*   **Purpose:**  Implements copy trading strategies by replicating trades of other sources.
-*   **Functionality:** Basic framework for copy trading logic. (For more details, see [Copy Bot Agent Documentation](./copybot_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** Source trader signals/trades, market data.
-*   **Configuration Parameters:** `agent_id`, `agent_type`. (See [Copy Bot Agent Documentation](./copybot_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent as shown in the [Copy Bot Agent Documentation](./copybot_agent.md).
-*   **Output and Monitoring:** Copied trades, performance metrics, and logs. (See [Copy Bot Agent Documentation](./copybot_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to integrate with source trader signals and add copy trading logic. (See [Copy Bot Agent Documentation](./copybot_agent.md) for details)
-
-### 10. Focus Agent (`focus_agent.py`)
-
-*   **Purpose:**  Helps users maintain focus and context during trading, managing distractions.
-*   **Functionality:** Basic framework for focus management. (For more details, see [Focus Agent Documentation](./focus_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** User goals, contextual information, distraction events.
-*   **Configuration Parameters:** `agent_id`, `agent_type`. (See [Focus Agent Documentation](./focus_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent as shown in the [Focus Agent Documentation](./focus_agent.md).
-*   **Output and Monitoring:** Focus reminders, contextual updates, distraction management actions, and logs. (See [Focus Agent Documentation](./focus_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to add focus management techniques and user customization. (See [Focus Agent Documentation](./focus_agent.md) for details)
 
 ### 11. Funding Agent (`funding_agent.py`)
 
@@ -178,17 +121,6 @@ This section details each agent available in `afz1`.
 *   **Output and Monitoring:** Arbitrage trades, profit/loss tracking, alerts, and logs. (See [Listing Arbitrage Agent Documentation](./listingarb_agent.md) for details)
 *   **Customization Notes:** Requires significant implementation to integrate listing sources and add arbitrage strategies. (See [Listing Arbitrage Agent Documentation](./listingarb_agent.md) for details)
 
-### 15. New Or Top Agent (`new_or_top_agent.py`)
-
-*   **Purpose:**  Monitors new cryptocurrency listings and top trending tokens for potential opportunities.
-*   **Functionality:** Basic framework for new or top tokens monitoring. (For more details, see [New Or Top Agent Documentation](./new_or_top_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** Market data, listing data, (optional) social media data.
-*   **Configuration Parameters:** `agent_id`, `agent_type`. (See [New Or Top Agent Documentation](./new_or_top_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent as shown in the [New Or Top Agent Documentation](./new_or_top_agent.md).
-*   **Output and Monitoring:** New token alerts, top trending token alerts, token analysis, and logs. (See [New Or Top Agent Documentation](./new_or_top_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to integrate data sources and add analysis logic. (See [New Or Top Agent Documentation](./new_or_top_agent.md) for details)
-
 ### 16. Order Book Monitor Agent (`orderbook_monitor_agent.py`)
 
 *   **Purpose:**  Monitors Binance order book for large orders exceeding a USD value threshold.
@@ -199,17 +131,6 @@ This section details each agent available in `afz1`.
 *   **Example Usage:** Configure environment variables and run the agent script from the command line. (See [Order Book Monitor Agent Documentation](./orderbook_monitor_agent.md) for details)
 *   **Output and Monitoring:** Real-time console alerts for large orders. (See [Order Book Monitor Agent Documentation](./orderbook_monitor_agent.md) for details)
 *   **Customization Notes:** Configure via environment variables. Extendable for more sophisticated alerting and analysis. (See [Order Book Monitor Agent Documentation](./orderbook_monitor_agent.md) for details)
-
-### 17. Phone Agent (`phone_agent.py`)
-
-*   **Purpose:**  Handles phone call interactions and delivers real-time voice notifications or alerts.
-*   **Functionality:** Basic framework for phone call interactions. (For more details, see [Phone Agent Documentation](./phone_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** Event triggers, (future) phone call commands.
-*   **Configuration Parameters:** `agent_id`, `agent_type`. (See [Phone Agent Documentation](./phone_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent as shown in the [Phone Agent Documentation](./phone_agent.md).
-*   **Output and Monitoring:** Phone call notifications, (future) phone call interactions, and logs. (See [Phone Agent Documentation](./phone_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to integrate phone services and add interaction logic. (See [Phone Agent Documentation](./phone_agent.md) for details)
 
 ### 18. RBI Agent (`rbi_agent.py`)
 
@@ -244,30 +165,6 @@ This section details each agent available in `afz1`.
 *   **Output and Monitoring:** Sentiment scores, sentiment analysis reports, sentiment alerts, and logs. (See [Sentiment Agent Documentation](./sentiment_agent.md) for details)
 *   **Customization Notes:** Abstract base class, requires subclassing to implement concrete sentiment analysis logic and data source integration. (See [Sentiment Agent Documentation](./sentiment_agent.md) for details)
 
-### 21. Sniper Agent (`sniper_agent.py`)
-
-*   **Purpose:**  Executes precise, short-term "sniper" trading strategies based on market conditions.
-*   **Functionality:** Basic framework for sniper trading logic. (For more details, see [Sniper Agent Documentation](./sniper_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** Real-time market data, trading strategy parameters.
-*   **Configuration Parameters:** `agent_id`, `agent_type`. Sniper-specific config to be defined. (See [Sniper Agent Documentation](./sniper_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent, configuring sniper strategy parameters. (See [Sniper Agent Documentation](./sniper_agent.md) for details)
-*   **Output and Monitoring:** Executed trades, performance metrics, (optional) alerts, and logs. (See [Sniper Agent Documentation](./sniper_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to add entry point detection and order execution logic. (See [Sniper Agent Documentation](./sniper_agent.md) for details)
-
-### 22. Solana Agent (`solana_agent.py`)
-
-*   **Purpose:**  Monitors and analyzes data and events specific to the Solana blockchain ecosystem.
-*   **Functionality:** Basic framework for Solana-specific monitoring. (For more details, see [Solana Agent Documentation](./solana_agent.md))
-*   **AI Model(s) Used:** None directly in the current basic implementation.
-*   **Data Inputs:** Solana blockchain data, Solana network events, configuration parameters.
-*   **Configuration Parameters:** `agent_id`, `agent_type`. Solana-specific config to be defined. (See [Solana Agent Documentation](./solana_agent.md) for details)
-*   **Example Usage:** Instantiate and run the agent, configuring Solana network connection details. (See [Solana Agent Documentation](./solana_agent.md) for details)
-*   **Output and Monitoring:** Solana network alerts, Solana data analysis, and logs. (See [Solana Agent Documentation](./solana_agent.md) for details)
-*   **Customization Notes:** Requires significant implementation to integrate Solana network and add monitoring logic. (See [Solana Agent Documentation](./solana_agent.md) for details)
-### 24. Tweet Agent (`tweet_agent.py`)
-
-*   **Purpose:**  Monitors and analyzes Twitter/X for market sentiment and trending topics.
 ### 23. Trading Agent (`trading_agent.py`)
 
 *   **Purpose:**  Executes automated trading strategies and manages cryptocurrency orders on exchanges.

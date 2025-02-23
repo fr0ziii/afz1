@@ -1,74 +1,78 @@
-<h1 style="text-align: center;"> afz1 - Autonomous Finance Agents </h1>
+# afz1 - Autonomous Finance Agents
 
-afz1 is a project focused on developing autonomous agents for various tasks in the decentralized finance (DeFi) space. These agents are designed to automate and optimize different aspects of trading, risk management, information gathering, and more.
+afz1 is an open-source project dedicated to the development of autonomous agents for decentralized finance (DeFi). These agents are designed to automate and optimize various tasks within the DeFi ecosystem, including trading, portfolio management, risk assessment, market analysis, and information aggregation. The project aims to provide a modular and extensible framework for building sophisticated DeFi agents.
 
 ## Project Structure
 
-The project is structured as follows:
+The project is organized into the following directories:
 
--   `src/`: Contains the source code for the different autonomous agents.
--   `data/`: Contains data files and resources.
--   `memory-bank/`: Contains memory bank files for project context and history.
--   `.env_example`: Example environment file.
+-   `src/`: Contains the core source code, including agent implementations and reusable components.
+-   `src/agents/`: Houses the implementations of various autonomous agents, each designed for a specific DeFi task.
+-   `src/components/`: Includes reusable components and modules used by the agents, such as data providers, signal generators, and utility functions.
+-   `data/`: Stores data files, datasets, and resources used by the agents.
+-   `memory-bank/`: Contains files for maintaining project context, history, and architectural decisions.
+-   `agent_missions/`: Defines specific missions and configurations for agents.
+-   `docs/`: Project documentation, including agent details, setup guides, and research papers.
+-   `.env_example`: Example environment configuration file for API keys and settings.
 -   `.gitignore`: Specifies intentionally untracked files that Git should ignore.
--   `README.md`: The current file, providing an overview of the project.
--   `requirements.txt`: Lists the project's dependencies.
+-   `README.md`: The current file, providing a project overview and setup instructions.
+-   `requirements.txt`: Lists the project's Python dependencies.
+
 ## Components
 
-The `src/components/` directory contains reusable components that are used by the agents. These components include:
+The `src/components/` directory contains reusable modules that provide functionalities to the agents:
 
--   `binance_data_provider.py`: Component for providing data from Binance.
--   `chart_data_provider.py`: Component for providing chart data.
--   `pattern_recognizer.py`: Component for recognizing chart patterns.
--   `signal_generator.py`: Component for generating trading signals.
--   `technical_indicator_calculator.py`: Component for calculating technical indicators.
+-   `binance_data_provider.py`: Fetches real-time and historical market data from the Binance exchange.
+-   `chart_data_provider.py`: Provides functionalities for accessing and processing chart data from various sources.
+-   `pattern_recognizer.py`: Implements algorithms for recognizing and identifying chart patterns.
+-   `signal_generator.py`: Generates trading signals based on market data and analysis.
+-   `technical_indicator_calculator.py`: Calculates various technical indicators (e.g., RSI, MACD, moving averages).
 
 ## Agents
 
-The `src/agents/` directory contains a variety of agents, each designed for a specific purpose:
+The `src/agents/` directory contains a diverse set of autonomous agents, each specialized for a specific DeFi task:
 
--   `base_agent.py`: Base class for all agents.
--   `chartanalysis_agent.py`: Agent for analyzing charts.
--   `chat_agent.py`: Agent for interacting with chat platforms.
--   `clips_agent.py`: Agent for creating video clips.
--   `code_runner_agent.py`: Agent for running code.
--   `copybot_agent.py`: Agent for copying trading strategies.
--   `focus_agent.py`: Agent for focusing on specific tasks.
--   `funding_agent.py`: Agent for managing funding.
--   `fundingarb_agent.py`: Agent for arbitrage in funding markets.
--   `liquidation_agent.py`: Agent for monitoring liquidations.
--   `listingarb_agent.py`: Agent for arbitrage in listing markets.
--   `new_or_top_agent.py`: Agent for identifying new or top assets.
--   `phone_agent.py`: Agent for interacting with phone services.
--   `rbi_agent.py`: Agent for regulatory compliance.
--   `risk_agent.py`: Agent for managing risk.
--   `sentiment_agent.py`: Agent for analyzing sentiment.
--   `sniper_agent.py`: Agent for sniping trades.
--   `solana_agent.py`: Agent for interacting with the Solana blockchain.
--   `trading_agent.py`: Agent for executing trades.
--   `tweet_agent.py`: Agent for interacting with Twitter.
--   `tx_agent.py`: Agent for monitoring transactions.
--   `video_agent.py`: Agent for creating videos.
--   `whale_agent.py`: Agent for monitoring large transactions (whales).
--   `whale_watcher_agent.py`: Agent for monitoring large transactions (whales).
--   `orderbook_monitor_agent.py`: Agent for monitoring order books.
+-   `base_agent.py`: Abstract base class providing common functionalities for all agents.
+-   `chartanalysis_agent.py`: Analyzes cryptocurrency charts to identify trading opportunities.
+-   `funding_agent.py`: Manages and optimizes funding strategies in DeFi.
+-   `fundingarb_agent.py`: Exploits arbitrage opportunities in funding rate markets.
+-   `liquidation_agent.py`: Monitors and reacts to liquidation events in DeFi protocols.
+-   `listingarb_agent.py`: Detects and acts on arbitrage opportunities arising from new token listings.
+-   `rbi_agent.py`: Focuses on regulatory and compliance aspects in DeFi.
+-   `risk_agent.py`: Assesses and manages risks associated with DeFi strategies.
+-   `sentiment_agent.py`: Analyzes market sentiment from social media and news sources.
+-   `trading_agent.py`: Core agent for executing and managing trading strategies.
+-   `tweet_agent.py`: Interacts with Twitter for market updates and sentiment analysis.
+-   `whale_agent.py`: Tracks and analyzes large transactions ("whales") for market insights.
+-   `whale_watcher_agent.py`: Continuously monitors whale activity for potential market movements.
+-   `orderbook_monitor_agent.py`: Monitors order book dynamics for trading signals.
 
 ## Agents missions
 
 The `agent_missions/` directory will contain files defining specific agent missions.
 
 -   [Chart Analysis Agent](agent_missions/chartanalysis_agent.md): Agent for analyzing charts.
+
 ## Setup and Installation
 
-1.  **Clone the Repository:**
+Follow these steps to set up and install the project:
+
+1.  **Prerequisites:**
+    -   Python 3.10 or higher is required.
+    -   `pip` package installer.
+    -   `venv` for virtual environment management (recommended).
+    -   Git for cloning the repository.
+
+2.  **Clone the Repository:**
 
     ```bash
     git clone https://github.com/fr0ziii/afz1
     cd afz1
     ```
-2.  **Environment Setup:**
 
-    Navigate into the cloned `afz1` directory in your terminal.
+3.  **Environment Setup:**
+
+    It is highly recommended to use a virtual environment to isolate project dependencies.
 
     *   **Using venv (Example):**
 
@@ -77,14 +81,18 @@ The `agent_missions/` directory will contain files defining specific agent missi
         source venv/bin/activate   # On Linux/macOS
         venv\Scripts\activate  # On Windows
         ```
-3.  **Dependency Installation:**
 
-    Install the required Python packages listed in `requirements.txt`:
+4.  **Dependency Installation:**
+
+    Install the required Python packages from `requirements.txt`:
 
     ```bash
     pip install -r requirements.txt
     ```
-4.  **API Keys Configuration:**
+
+5.  **API Keys Configuration:**
+
+    API keys are required to interact with various services (e.g., Binance, Etherscan).
 
     *   Copy the `.env_example` file to `.env`:
 
@@ -92,7 +100,7 @@ The `agent_missions/` directory will contain files defining specific agent missi
         cp .env_example .env  # On Linux/macOS
         copy .env_example .env  # On Windows
         ```
-    *   Open the `.env` file and add your API keys:
+    *   Open the `.env` file and add your API keys. Example:
 
         ```
         ETHERSCAN_API_KEY=YOUR_ETHERSCAN_API_KEY
@@ -100,25 +108,36 @@ The `agent_missions/` directory will contain files defining specific agent missi
         # Add other API keys as needed
         ```
 
-    **Important Security Note:** Never commit the `.env` file with your actual API keys to version control. Keep your API keys secure.
+    **Security Note:**  **Never commit the `.env` file with your actual API keys to version control.** Ensure your API keys are kept confidential and secure.
 
 ## Running an Agent
 
-To run a specific agent, navigate to the project directory and execute the agent's script using Python:
+To execute a specific agent:
 
-```bash
-python src/agents/<agent_name>.py
-```
+1.  Navigate to the project root directory in your terminal.
+2.  Run the agent's script using Python:
 
-Replace `<agent_name>` with the name of the agent you want to run (e.g., `whale_watcher_agent.py`).
+    ```bash
+    python src/agents/<agent_name>.py
+    ```
+
+    Replace `<agent_name>` with the desired agent's filename (e.g., `whale_watcher_agent.py`).
 
 ## Documentation
 
-Detailed documentation for each agent and the project as a whole can be found in the `docs/` directory.
+Detailed documentation, including agent-specific guides and project architecture overviews, is located in the `docs/` directory.
+
+## Roadmap
+
+-   **Enhanced Agent Functionality:** Expand the capabilities of existing agents with more sophisticated strategies and features.
+-   **New Agent Development:** Introduce new agents for additional DeFi tasks and opportunities.
+-   **Improved Documentation:** Continuously update and expand project documentation for clarity and completeness.
+-   **Community Contributions:** Encourage and integrate community contributions to broaden project scope and innovation.
+-   **Integration with More DeFi Protocols:** Extend agent compatibility to a wider range of DeFi platforms and protocols.
 
 ## Contributing
 
-Contributions to the project are welcome. Please refer to the contributing guidelines for more information.
+We welcome contributions to the project! Please see `CONTRIBUTING.md` (to be created) for guidelines on how to contribute.
 
 ## License
 
@@ -126,4 +145,4 @@ This project is licensed under the MIT License.
 
 ## Disclaimer
 
-This project is for demonstration and educational purposes only. It is not intended for production use or financial advice. Use it at your own risk.
+**For Educational and Demonstration Purposes Only:** This project is intended for educational and demonstration purposes. It is not designed for production use or financial advice. Use of this project and its agents is at your own risk.

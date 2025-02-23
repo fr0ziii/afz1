@@ -70,6 +70,29 @@ class OrderBookAnalyzer:
                 large_orders.append({"type": "ask", "price": price, "quantity": quantity, "value_usd": value_usd})
         return large_orders
 
+    def calculate_buy_sell_ratio(self, large_orders):
+        """Calculates the buy/sell ratio of large orders."""
+        if not large_orders:
+            return 0.5  # Default to neutral if no large orders
+        buy_orders = sum(1 for order in large_orders if order["type"] == "bid")
+        sell_orders = sum(1 for order in large_orders if order["type"] == "ask")
+        total_orders = buy_orders + sell_orders
+        if total_orders == 0:
+            return 0.5  # Default to neutral if no large orders
+        return buy_orders / total_orders
+
+def identify_support_resistance_levels(self, large_orders, top_levels=3):
+    """Identifies support and resistance levels based on large order concentration."""
+    if not large_orders:
+        return []
+    price_levels = {}
+    for order in large_orders:
+        price = order["price"]
+        price_levels[price] = price_levels.get(price, 0) + 1
+    sorted_levels = sorted(price_levels.items(), key=lambda item: item[1], reverse=True)
+    top_levels_prices = [level[0] for level in sorted_levels[:top_levels]]
+    return top_levels_prices
+
 class AlertManager:
     """Handles alert notifications."""
     def trigger_alert(self, message):
@@ -117,11 +140,14 @@ class OrderBookMonitorAgent(BaseAgent):
             print(f"Current price: {current_price}")
             if order_book_data and current_price:
                 large_orders = self.order_book_analyzer.analyze_order_book(order_book_data, current_price)
-                for order in large_orders:
-                    message = f"Large {order['type']} detected: {order['quantity']} @ {order['price']} (Value: ${order['value_usd']:,.2f})"
-                    self.alert_manager.trigger_alert(message)
-            else:
-                print(f"Failed to fetch data for {self.trading_pair}")
+                if large_orders:
+                    buy_sell_ratio = self.order_book_analyzer.calculate_buy_sell_ratio(large_orders)
+                    ratio_percentage = buy_sell_ratio * 100
+                    for order in large_orders:
+                        message = f"Large {order['type']} detected: {order['quantity']} @ {order['price']} (Value: ${order['value_usd']:,.2f}). Buy/Sell Ratio: {ratio_percentage:.2f}%"
+                        self.alert_manager.trigger_alert(message)
+                else:
+                    print(f"Failed to fetch data for {self.trading_pair}")
             time.sleep(self.monitor_interval)
 
     def stop(self):
