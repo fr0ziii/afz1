@@ -39,8 +39,6 @@ Welcome to the documentation for the `afz1` project, an open-source framework fo
     - `NewOrTopAgent`: Agent to identify and trade new or top-performing cryptocurrencies.
     - `RiskAgent`: Agent for comprehensive risk assessment and management.
     - `SolanaAgent`: (If applicable) Specialized agent for Solana ecosystem opportunities.
-    - `TXAgent`: Agent for monitoring and analyzing blockchain transactions.
-    - `VideoAgent`: Agent for analyzing video content related to market trends.
     - `PhoneAgent`: (To be created) Agent for real-time alerts and notifications via phone.
     - `ClipsAgent`: Agent for creating and managing video clips of market analysis.
     - `ChatAgent`: Agent for interacting with market participants in chat platforms.
