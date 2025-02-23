@@ -94,27 +94,21 @@ class ChartAnalysisAgent(BaseAgent):
             if chart_data:
                 try:
                     indicator_df = self.indicator_calculator.calculate_indicators(chart_data)  # Calculate indicators
-                    logger.info("Chart Data with Indicators:")
-                    logger.info(indicator_df)
+                    logger.debug("Chart data indicators calculated.") # Simplified log
                 except Exception as e:
                     logger.error(f"Error calculating indicators: {e}")
                     return
 
                 try:
                     patterns = self.pattern_recognizer.recognize_patterns(chart_data)  # Recognize patterns
-                    logger.info("\nRecognized Patterns:")
-                    if patterns.get('doji'):
-                        logger.info("Doji pattern detected.")
-                    else:
-                        logger.info("No Doji pattern detected.")
+                    logger.info(f"Recognized patterns: {patterns.get('patterns')}") # Simplified pattern log
                 except Exception as e:
                     logger.error(f"Error recognizing patterns: {e}")
                     return
 
                 try:
                     signals = self.signal_generator.generate_signals(indicator_df, patterns)  # Generate signals
-                    logger.info("\nTrading Signals:")
-                    logger.info(signals)
+                    logger.info(f"Trading Signal: {signals.get('overall_signal')}, confidence: {signals.get('confidence')}") # Simplified signal log
                 except Exception as e:
                     logger.error(f"Error generating signals: {e}")
                     return
