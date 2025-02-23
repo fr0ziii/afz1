@@ -1,30 +1,40 @@
-from src.agents.base_agent import BaseAgent # Changed to absolute import
-from src.components.binance_data_provider import BinanceDataProvider # Changed to absolute import
-from ..components.pattern_recognizer import PatternRecognizer # Import PatternRecognizer
-from ..components.signal_generator import SignalGenerator # Import SignalGenerator
-from src.components.technical_indicator_calculator import TechnicalIndicatorCalculator # Import TechnicalIndicatorCalculator
+import logging
+from src.agents.base_agent import BaseAgent
+from src.components.binance_data_provider import BinanceDataProvider
+from src.components.pattern_recognizer import PatternRecognizer
+from src.components.signal_generator import SignalGenerator
+from src.components.technical_indicator_calculator import TechnicalIndicatorCalculator
+from typing import Dict, List, Any, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.config_manager import ConfigManager  # Import ConfigManager for type hinting
+
+# Initialize logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class ChartAnalysisAgent(BaseAgent):
     """
     Agent for performing technical analysis on cryptocurrency charts.
     """
 
-    def __init__(self, config):
+    def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
-        self.config = self.load_config(config) # Load config using BaseAgent's method
-        self.chart_data_provider = self.setup_chart_data_provider()
-        self.indicator_calculator = self.setup_indicator_calculator()
-        self.pattern_recognizer = self.setup_pattern_recognizer()
-        self.signal_generator = self.setup_signal_generator()
-        self.config_manager = self.setup_config_manager()
+        self.config: Dict[str, Any] = self.load_config(config) # Load config using BaseAgent's method
+        self.validate_config() # Validate configuration after loading
+        self.chart_data_provider: BinanceDataProvider = self.setup_chart_data_provider()
+        self.indicator_calculator: TechnicalIndicatorCalculator = self.setup_indicator_calculator()
+        self.pattern_recognizer: PatternRecognizer = self.setup_pattern_recognizer()
+        self.signal_generator: SignalGenerator = self.setup_signal_generator()
+        self.config_manager: Dict[str, Any] = self.setup_config_manager() # Assuming config manager returns a dict for now
 
-    def setup_dependencies(self):
+    def setup_dependencies(self) -> None:
         """
         Set up agent dependencies (currently empty).
         """
         pass # Add actual dependency setup later
 
-    def setup_config_manager(self):
+    def setup_config_manager(self) -> Dict[str, Any]: # Assuming it returns a dict
         """
         Sets up the configuration manager component.
         For now, it will simply return the loaded config.
@@ -32,57 +42,89 @@ class ChartAnalysisAgent(BaseAgent):
         """
         return self.config
 
-    def setup_chart_data_provider(self):
+    def setup_chart_data_provider(self) -> BinanceDataProvider:
         """
         Sets up the chart data provider component.
         """
-        return BinanceDataProvider(self.config) # Instantiate BinanceDataProvider
+        return BinanceDataProvider(self.config)
 
-    def setup_indicator_calculator(self):
+    def setup_indicator_calculator(self) -> TechnicalIndicatorCalculator:
         """
         Sets up the technical indicator calculator component.
         """
-        return TechnicalIndicatorCalculator(self.config) # Instantiate TechnicalIndicatorCalculator
+        return TechnicalIndicatorCalculator(self.config)
 
-    def setup_pattern_recognizer(self):
+    def setup_pattern_recognizer(self) -> PatternRecognizer:
         """
         Sets up the chart pattern recognizer component.
         """
-        return PatternRecognizer(self.config) # Instantiate PatternRecognizer
+        return PatternRecognizer(self.config)
 
-    def setup_signal_generator(self):
+    def setup_signal_generator(self) -> SignalGenerator:
         """
         Sets up the signal generator component.
         """
-        print("Signal generator setup") # Placeholder setup
-        return SignalGenerator(self.config) # Instantiate SignalGenerator
+        logger.info("Signal generator setup") # Placeholder setup
+        return SignalGenerator(self.config)
+
+    def validate_config(self) -> None:
+        """
+        Validates the agent configuration to ensure required parameters are present and valid.
+        """
+        required_params = ["trading_pair", "timeframe", "indicators", "exchange"]
+        for param in required_params:
+            if param not in self.config:
+                raise ValueError(f"Configuration parameter '{param}' is required.")
+        if not isinstance(self.config["trading_pair"], str):
+            raise TypeError("Configuration parameter 'trading_pair' must be a string.")
+        if not isinstance(self.config["timeframe"], str):
+            raise TypeError("Configuration parameter 'timeframe' must be a string.")
+        if not isinstance(self.config["indicators"], list):
+            raise TypeError("Configuration parameter 'indicators' must be a list.")
+        if not isinstance(self.config["exchange"], str):
+            raise TypeError("Configuration parameter 'exchange' must be a string.")
 
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the chart analysis agent.
         """
-        chart_data = self.chart_data_provider.fetch_data() # Fetch data using data provider
-        if chart_data:
-            indicator_df = self.indicator_calculator.calculate_indicators(chart_data) # Calculate indicators
-            print("Chart Data with Indicators:")
-            print(indicator_df) # Print DataFrame with indicators
+        try:
+            chart_data = self.chart_data_provider.fetch_data()  # Fetch data using data provider
+            if chart_data:
+                try:
+                    indicator_df = self.indicator_calculator.calculate_indicators(chart_data)  # Calculate indicators
+                    logger.info("Chart Data with Indicators:")
+                    logger.info(indicator_df)
+                except Exception as e:
+                    logger.error(f"Error calculating indicators: {e}")
+                    return
 
-            patterns = self.pattern_recognizer.recognize_patterns(chart_data) # Recognize patterns
-            print("\nRecognized Patterns:")
-            if patterns.get('doji'):
-                print("Doji pattern detected.")
+                try:
+                    patterns = self.pattern_recognizer.recognize_patterns(chart_data)  # Recognize patterns
+                    logger.info("\nRecognized Patterns:")
+                    if patterns.get('doji'):
+                        logger.info("Doji pattern detected.")
+                    else:
+                        logger.info("No Doji pattern detected.")
+                except Exception as e:
+                    logger.error(f"Error recognizing patterns: {e}")
+                    return
+
+                try:
+                    signals = self.signal_generator.generate_signals(indicator_df, patterns)  # Generate signals
+                    logger.info("\nTrading Signals:")
+                    logger.info(signals)
+                except Exception as e:
+                    logger.error(f"Error generating signals: {e}")
+                    return
             else:
-                print("No Doji pattern detected.")
-
-            signals = self.signal_generator.generate_signals(indicator_df, patterns) # Generate signals
-            print("\nTrading Signals:")
-            print(signals) # Print trading signals
-        else:
-            print("Failed to fetch chart data.")
+                logger.info("Failed to fetch chart data.")
+        except Exception as e:
+            logger.error(f"Error fetching chart data: {e}")
 
 
-    def stop(self):
+    def stop(self) -> None:
         """
         Stops the chart analysis agent.
         """

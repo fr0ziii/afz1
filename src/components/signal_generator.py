@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 class SignalGenerator:
     """
     Basic class for the signal generator component.
@@ -7,7 +11,7 @@ class SignalGenerator:
         Initializes the SignalGenerator.
         """
         self.config = config
-        print("SignalGenerator initialized")
+        logger.info("SignalGenerator initialized")
 
     def generate_signals(self, indicator_data, pattern_data):
         """
@@ -24,13 +28,20 @@ class SignalGenerator:
         momentum_signal = "Neutral"
         momentum_strength = 0.5 # Default neutral strength
         if ema_20 is not None and ema_50 is not None and rsi_14 is not None:
-            if ema_20 > ema_50 and rsi_14 > 50:
-                momentum_signal = "Strong Bullish"
-                momentum_strength = 0.7  # Stronger signal weight
-            elif ema_20 < ema_50 and rsi_14 < 50:
-                momentum_signal = "Strong Bearish"
-                momentum_strength = 0.7  # Stronger signal weight
-            elif (ema_20 > ema_50 and rsi_14 < 50) or (ema_20 < ema_50 and rsi_14 > 50):
+            ema_diff_percentage = ((ema_20 - ema_50) / ema_50) * 100
+            if ema_20 > ema_50 and rsi_14 > 70: # RSI overbought, strong bullish
+                momentum_signal = "Overbought Bullish"
+                momentum_strength = 0.9  # Very strong signal weight
+            elif ema_20 < ema_50 and rsi_14 < 30: # RSI oversold, strong bearish
+                momentum_signal = "Oversold Bearish"
+                momentum_strength = 0.9  # Very strong signal weight
+            elif ema_20 > ema_50 and ema_diff_percentage > 0.5 and rsi_14 > 50: # EMA crossover and RSI bullish
+                momentum_signal = "Bullish"
+                momentum_strength = 0.8
+            elif ema_20 < ema_50 and ema_diff_percentage < -0.5 and rsi_14 < 50: # EMA crossover and RSI bearish
+                momentum_signal = "Bearish"
+                momentum_strength = 0.8
+            elif (ema_20 > ema_50 and rsi_14 < 50) or (ema_20 < ema_50 and rsi_14 > 50): # Mixed signals
                 momentum_signal = "Mixed"
                 momentum_strength = 0.4  # Moderate signal weight
             else:
@@ -38,6 +49,8 @@ class SignalGenerator:
                 momentum_strength = 0.5  # Neutral signal weight
         signals['momentum'] = momentum_signal
         signal_weights['momentum'] = momentum_strength
+        logger.info(f"Momentum Signal: {momentum_signal} with strength {momentum_strength}")
+
 
         # 2. Volume Analysis
         current_volume = indicator_data['volume'].iloc[-1] if 'volume' in indicator_data.columns else None
@@ -47,47 +60,93 @@ class SignalGenerator:
             volume_ma_7 = indicator_data['volume'].rolling(window=7).mean().iloc[-1] if 'volume' in indicator_data.columns else None
             volume_ma_30 = indicator_data['volume'].rolling(window=30).mean().iloc[-1] if 'volume' in indicator_data.columns else None
             if volume_ma_7 is not None and volume_ma_30 is not None:
-                if current_volume < 0.9 * volume_ma_7:  # Below 90% of 7-bar MA
+                if current_volume > 1.5 * volume_ma_30: # Significant volume spike
+                    volume_signal = "Spike"
+                    volume_strength = 0.7 # High volume spike indicates strong interest
+                elif current_volume < 0.7 * volume_ma_7: # Very low volume
+                    volume_signal = "Very Weak"
+                    volume_strength = 0.1 # Very weak volume, low interest
+                elif current_volume < 0.9 * volume_ma_7:  # Below 90% of 7-bar MA
                     volume_signal = "Weak"
-                    volume_strength = 0.2  # Weaker signal weight
+                    volume_strength = 0.3  # Weaker signal weight
                 elif current_volume > 1.2 * volume_ma_7:  # Above 120% of 7-bar MA
                     volume_signal = "Strong"
                     volume_strength = 0.5  # Stronger signal weight
+                else:
+                    volume_signal = "Neutral"
+                    volume_strength = 0.3 # Neutral signal weight
         signals['volume'] = volume_signal
         signal_weights['volume'] = volume_strength
+        logger.info(f"Volume Signal: {volume_signal} with strength {volume_strength}")
 
-        # 3. Candlestick Pattern
-        candlestick_signal = "Neutral"
-        candlestick_strength = 0.4  # Slightly lower weight
+        # 3. Candlestick Pattern (Basic - replaced by PatternRecognizer)
+        candlestick_signal = "Neutral" # Placeholder - Candlestick signal now from PatternRecognizer
+        candlestick_strength = 0.1  # Reduced weight as PatternRecognizer is used
         last_candle_close = indicator_data['close'].iloc[-1] if 'close' in indicator_data.columns else None
         last_candle_open = indicator_data['open'].iloc[-1] if 'open' in indicator_data.columns else None
         if last_candle_close is not None and last_candle_open is not None:
-            if last_candle_close < last_candle_open:  # Red candle (bearish)
-                candlestick_signal = "Bearish"
-                candlestick_strength = 0.4
-            elif last_candle_close > last_candle_open:  # Green candle (bullish)
-                candlestick_signal = "Bullish"
-                candlestick_strength = 0.4
-        signals['candlestick_pattern'] = candlestick_signal
-        signal_weights['candlestick_pattern'] = candlestick_strength
+            if last_candle_close < last_candle_open:  # Red candle (bearish) - still include basic candle direction
+                candlestick_signal = "Bearish Candle" # Basic bearish candle
+            elif last_candle_close > last_candle_open:  # Green candle (bullish) - still include basic candle direction
+                candlestick_signal = "Bullish Candle" # Basic bullish candle
+        signals['candlestick_direction'] = candlestick_signal # Renamed to candlestick_direction
+        signal_weights['candlestick_direction'] = candlestick_strength # Lower weight
+        logger.info(f"Candlestick Direction Signal (Basic): {candlestick_signal} with strength {candlestick_strength}")
 
-        # 4. Bollinger Bands
+        # 4. Enhanced Candlestick Pattern Recognition from PatternRecognizer
+        pattern_signal = "Neutral"
+        pattern_strength = 0.6 # Default weight
+        detected_patterns = pattern_data.get('patterns', []) # Get detected patterns from pattern_data
+        if detected_patterns:
+            pattern_names = [pattern['pattern_name'] for pattern in detected_patterns]
+            if 'BullishEngulfing' in pattern_names:
+                pattern_signal = "Bullish Engulfing"
+            elif 'BearishEngulfing' in pattern_names:
+                pattern_signal = "Bearish Engulfing"
+            elif 'Doji' in pattern_names:
+                pattern_signal = "Doji"
+            elif 'MorningStar' in pattern_names:
+                pattern_signal = "Morning Star"
+            elif 'EveningStar' in pattern_names:
+                pattern_signal = "Evening Star"
+            # Add more patterns here as needed
+            pattern_strength = 0.8 # Stronger signal if specific patterns are detected
+            pattern_list_str = ', '.join(pattern_names)
+        else:
+            pattern_list_str = "No pattern detected"
+        signals['chart_patterns'] = pattern_signal # Renamed to candlestick_pattern (enhanced)
+        signal_weights['chart_patterns'] = pattern_strength # Higher weight
+        logger.info(f"Candlestick Pattern Signal (Enhanced): {pattern_signal} with strength {pattern_strength}, Patterns: {pattern_list_str}")
+
+        # 5. Bollinger Bands
         bb_lower = indicator_data['BB_Lower'].iloc[-1] if 'BB_Lower' in indicator_data.columns else None
         bb_upper = indicator_data['BB_Upper'].iloc[-1] if 'BB_Upper' in indicator_data.columns else None
+        bb_mid = indicator_data['BB_Mid'].iloc[-1] if 'BB_Mid' in indicator_data.columns else None # Middle band (SMA)
         price = indicator_data['close'].iloc[-1] if 'close' in indicator_data.columns else None
         bollinger_signal = "Neutral"
         bollinger_strength = 0.5
-        if bb_lower is not None and bb_upper is not None and price is not None:
+        if bb_lower is not None and bb_upper is not None and price is not None and bb_mid is not None:
             if price < bb_lower:
                 bollinger_signal = "Buy"  # Buy signal if price is below lower band
-                bollinger_strength = 0.6
+                bollinger_strength = 0.7
             elif price > bb_upper:
                 bollinger_signal = "Sell"  # Sell signal if price is above upper band
-                bollinger_strength = 0.6
+                bollinger_strength = 0.7
+            elif bb_lower < price < bb_mid: # Price between lower band and middle band
+                bollinger_signal = "Weak Buy" # Weak buy signal - potential bounce
+                bollinger_strength = 0.4
+            elif bb_upper > price > bb_mid: # Price between upper band and middle band
+                bollinger_signal = "Weak Sell" # Weak sell signal - potential pullback
+                bollinger_strength = 0.4
+            else:
+                bollinger_signal = "Neutral"
+                bollinger_strength = 0.5
+
         signals['bollinger_bands'] = bollinger_signal
         signal_weights['bollinger_bands'] = bollinger_strength
+        logger.info(f"Bollinger Bands Signal: {bollinger_signal} with strength {bollinger_strength}")
 
-        # 5. MACD Crossovers
+        # 6. MACD Crossovers
         macd_signal_val = indicator_data['MACD_Signal'].iloc[-1] if 'MACD_Signal' in indicator_data.columns else None
         macd_val = indicator_data['MACD'].iloc[-1] if 'MACD' in indicator_data.columns else None
         prev_macd_signal_val = indicator_data['MACD_Signal'].iloc[-2] if 'MACD_Signal' in indicator_data.columns and len(indicator_data) > 1 else None
@@ -97,14 +156,15 @@ class SignalGenerator:
         if macd_val is not None and macd_signal_val is not None and prev_macd_val is not None and prev_macd_signal_val is not None:
             if prev_macd_val < prev_macd_signal_val and macd_val > macd_signal_val:
                 macd_signal = "Bullish Crossover"  # MACD bullish crossover
-                macd_strength = 0.6
+                macd_strength = 0.7
             elif prev_macd_val > prev_macd_signal_val and macd_val < macd_signal_val:
                 macd_signal = "Bearish Crossover"  # MACD bearish crossover
-                macd_strength = 0.6
+                macd_strength = 0.7
         signals['macd_crossover'] = macd_signal
         signal_weights['macd_crossover'] = macd_strength
+        logger.info(f"MACD Crossover Signal: {macd_signal} with strength {macd_strength}")
 
-        # 6. Consolidated Signal and Confidence (Weighted Averaging)
+        # 7. Consolidated Signal and Confidence (Weighted Averaging)
         total_weighted_strength = sum(signal_weights.values())
         num_signals = len(signal_weights)
         average_weighted_strength = total_weighted_strength / num_signals if num_signals > 0 else 0.5
@@ -118,6 +178,7 @@ class SignalGenerator:
             overall_signal = "HOLD"
         signals['overall_signal'] = overall_signal
         signals['confidence'] = f"{confidence}%"
+        logger.info(f"Overall Signal: {overall_signal} with confidence {confidence}%")
 
         import datetime
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
